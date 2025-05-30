@@ -1,0 +1,5 @@
+TgCrypto
+Kurigram==2.2.4
+motor
+python-dotenv
+pyromod==1.1.0
