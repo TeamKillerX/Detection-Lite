@@ -20,12 +20,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import logging
 import asyncio
+import logging
+
 from pyrogram import idle
-from .multi_start import start_user
-from . import assistant
+
 from database import db
+
+from . import assistant
+from .multi_start import start_user
+
 
 class DetectionManager:
     def __init__(self):

@@ -22,28 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from pyrogram import Client
 import logging
-from Detection import assistant
-from . import IGNORE_CHANNEL_DEV_LIST
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+from pyrogram import Client
 from pyrogram.raw.types import (
+    Channel,
+    ChannelForbidden,
+    ChatForbidden,
+    MessageService,
+    PeerUser,
+    PrivacyKeyChatInvite,
+    PrivacyKeyProfilePhoto,
+    PrivacyValueAllowAll,
+    PrivacyValueDisallowAll,
     UpdateNewMessage,
+    UpdatePinnedMessages,
     UpdatePrivacy,
     UpdateUserName,
-    UpdatePinnedMessages,
-    PeerUser,
-    MessageService,
-    PrivacyKeyProfilePhoto,
-    PrivacyValueDisallowAll,
-    PrivacyValueAllowAll,
-    PrivacyKeyChatInvite,
     Username,
-    Channel,
-    ChatForbidden,
-    ChannelForbidden,
 )
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
+from Detection import assistant
+
+from . import IGNORE_CHANNEL_DEV_LIST
 
 LOGS = logging.getLogger(__name__)
 
@@ -246,6 +248,44 @@ async def check_raw(client: Client, update, users, chats):
             await assistant.send_message(
                 client.me.id,
                 f"#SCAM_ALERT\n"
+                f"**Channel:** {chat.title}\n"
+                f"**Date:** {chat.date}\n"
+                f"**ID:** `{cid}`\n"
+                f"**Username:** <spoiler>{chat.username if chat else None}</spoiler>\n"
+                f"**Access hash:** {chat.access_hash}\n",
+                disable_web_page_preview=True,
+                reply_markup=InlineKeyboardMarkup(
+                    [[
+                        InlineKeyboardButton(
+                            "View Channel",
+                            url=f"https://t.me/c/{cid}/1"
+                        )
+                    ]]
+                )
+            )
+        elif isinstance(chat, Channel) and getattr(chat, "fake", False):
+            await assistant.send_message(
+                client.me.id,
+                f"#FAKE_ALERT\n"
+                f"**Channel:** {chat.title}\n"
+                f"**Date:** {chat.date}\n"
+                f"**ID:** `{cid}`\n"
+                f"**Username:** <spoiler>{chat.username if chat else None}</spoiler>\n"
+                f"**Access hash:** {chat.access_hash}\n",
+                disable_web_page_preview=True,
+                reply_markup=InlineKeyboardMarkup(
+                    [[
+                        InlineKeyboardButton(
+                            "View Channel",
+                            url=f"https://t.me/c/{cid}/1"
+                        )
+                    ]]
+                )
+            )
+        elif isinstance(chat, Channel) and getattr(chat, "broadcast", False):
+            await assistant.send_message(
+                client.me.id,
+                f"#BROADCAST_ALERT\n"
                 f"**Channel:** {chat.title}\n"
                 f"**Date:** {chat.date}\n"
                 f"**ID:** `{cid}`\n"

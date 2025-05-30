@@ -22,22 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import logging
 import asyncio
-import pyromod
-from Detection import assistant
-from database import db
-from config import API_ID, API_HASH
-from pyrogram import Client
+import logging
 
+import pyromod
+from pyrogram import Client
 from pyrogram.errors import (
-    UserDeactivatedBan,
     AuthKeyDuplicated,
     AuthKeyInvalid,
-    UserDeactivated,
     AuthKeyUnregistered,
-    SessionRevoked
+    SessionRevoked,
+    UserDeactivated,
+    UserDeactivatedBan,
 )
+
+from config import API_HASH, API_ID
+from database import db
+from Detection import assistant
+
 LOGS = logging.getLogger(__name__)
 
 async def start_user() -> None:
@@ -172,13 +174,13 @@ async def _check_session_health(client: Client, user_id: int, interval: int = 30
     while True:
         try:
             await asyncio.wait_for(client.get_me(), timeout=10)
-            
+
             if not client.is_connected:
                 raise ConnectionError("Client disconnected")
-                
+
             LOGS.debug(f"Session health OK: User {user_id}")
             await asyncio.sleep(interval)
-            
+
         except (UserDeactivated, AuthKeyInvalid) as e:
             LOGS.warning(f"💀 Session dead for {user_id}: {type(e).__name__}")
             await _handle_dead_session(user_id, e)

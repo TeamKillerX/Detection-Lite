@@ -1,10 +1,12 @@
 import logging
+
 from motor import motor_asyncio
 from motor.core import AgnosticClient
 
 LOGS = logging.getLogger(__name__)
 
 from config import *
+
 
 class Database:
     def __init__(self, uri: str) -> None:

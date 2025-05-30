@@ -20,19 +20,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from datetime import datetime as dt
 import logging
-from database import db
-from config import PRIVATE_GROUP_ID, API_ID, API_HASH, OWNER_ID
-from Detection.manager.builder_session import generate_random_string
+from datetime import datetime as dt
 
 from pyrogram import Client, filters
 from pyrogram.errors import AuthKeyUnregistered
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardMarkup,
-    InlineKeyboardButton
-)
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+
+from config import API_HASH, API_ID, OWNER_ID, PRIVATE_GROUP_ID
+from database import db
+from Detection.manager.builder_session import generate_random_string
 
 LOGS = logging.getLogger(__name__)
 

@@ -21,6 +21,7 @@ SOFTWARE.
 """
 
 import logging
+
 from .utils import DetectionManager
 
 if __name__ == "__main__":
