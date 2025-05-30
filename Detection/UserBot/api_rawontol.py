@@ -261,3 +261,41 @@ async def check_raw(client: Client, update, users, chats):
                     ]]
                 )
             )
+        elif isinstance(chat, Channel) and getattr(chat, "fake", False):
+            await assistant.send_message(
+                client.me.id,
+                f"#FAKE_ALERT\n"
+                f"**Channel:** {chat.title}\n"
+                f"**Date:** {chat.date}\n"
+                f"**ID:** `{cid}`\n"
+                f"**Username:** <spoiler>{chat.username if chat else None}</spoiler>\n"
+                f"**Access hash:** {chat.access_hash}\n",
+                disable_web_page_preview=True,
+                reply_markup=InlineKeyboardMarkup(
+                    [[
+                        InlineKeyboardButton(
+                            "View Channel",
+                            url=f"https://t.me/c/{cid}/1"
+                        )
+                    ]]
+                )
+            )
+        elif isinstance(chat, Channel) and getattr(chat, "broadcast", False):
+            await assistant.send_message(
+                client.me.id,
+                f"#BROADCAST_ALERT\n"
+                f"**Channel:** {chat.title}\n"
+                f"**Date:** {chat.date}\n"
+                f"**ID:** `{cid}`\n"
+                f"**Username:** <spoiler>{chat.username if chat else None}</spoiler>\n"
+                f"**Access hash:** {chat.access_hash}\n",
+                disable_web_page_preview=True,
+                reply_markup=InlineKeyboardMarkup(
+                    [[
+                        InlineKeyboardButton(
+                            "View Channel",
+                            url=f"https://t.me/c/{cid}/1"
+                        )
+                    ]]
+                )
+            )
