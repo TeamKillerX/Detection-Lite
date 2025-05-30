@@ -46,6 +46,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from Detection import assistant
 
 from . import IGNORE_CHANNEL_DEV_LIST
+from config import BLACKLIST_CHANNEL_NOPOST
 
 LOGS = logging.getLogger(__name__)
 
@@ -283,6 +284,8 @@ async def check_raw(client: Client, update, users, chats):
                 )
             )
         elif isinstance(chat, Channel) and getattr(chat, "broadcast", False):
+            if cid in BLACKLIST_CHANNEL_NOPOST:
+                return
             await assistant.send_message(
                 client.me.id,
                 f"#BROADCAST_ALERT\n"
