@@ -43,10 +43,10 @@ from pyrogram.raw.types import (
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+from config import BLACKLIST_CHANNEL_NOPOST
 from Detection import assistant
 
 from . import IGNORE_CHANNEL_DEV_LIST
-from config import BLACKLIST_CHANNEL_NOPOST
 
 LOGS = logging.getLogger(__name__)
 
