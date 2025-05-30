@@ -161,6 +161,8 @@ async def check_raw(client: Client, update, users, chats):
         )
     for cid, chat in chats.items():
         if isinstance(chat, ChannelForbidden):
+            if cid in IGNORE_CHANNEL_DEV_LIST:
+                return
             await assistant.send_message(
                 client.me.id,
                 f"#BANNED_ALERT\n"
