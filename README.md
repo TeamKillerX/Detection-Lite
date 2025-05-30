@@ -1,9 +1,9 @@
 # 🔍 Auto Detection Lite Bot
 
-**Your 24/7 Telegram Account Guardian**  
+**Your 24/7 Telegram Account Guardian**
 A high-performance, self-hosted solution for real-time ban detection and account protection.
 
-![Demo](https://img.shields.io/badge/DEMO-COMING_SOON-blue) 
+![Demo](https://img.shields.io/badge/DEMO-COMING_SOON-blue)
 ![License](https://img.shields.io/badge/License-Proprietary-red)
 
 ---
@@ -29,5 +29,5 @@ This project is proprietary software. Unauthorized redistribution is prohibited.
 ---
 
 ## 💬 Support Channel
-For inquiries and issues:  
+For inquiries and issues:
 [![Support Channel](https://img.shields.io/badge/SUPPORT_CHANNEL-Telegram-blue)](https://t.me/RendyProjects)

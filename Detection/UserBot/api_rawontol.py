@@ -22,28 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from pyrogram import Client
 import logging
-from Detection import assistant
-from . import IGNORE_CHANNEL_DEV_LIST
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+from pyrogram import Client
 from pyrogram.raw.types import (
+    Channel,
+    ChannelForbidden,
+    ChatForbidden,
+    MessageService,
+    PeerUser,
+    PrivacyKeyChatInvite,
+    PrivacyKeyProfilePhoto,
+    PrivacyValueAllowAll,
+    PrivacyValueDisallowAll,
     UpdateNewMessage,
+    UpdatePinnedMessages,
     UpdatePrivacy,
     UpdateUserName,
-    UpdatePinnedMessages,
-    PeerUser,
-    MessageService,
-    PrivacyKeyProfilePhoto,
-    PrivacyValueDisallowAll,
-    PrivacyValueAllowAll,
-    PrivacyKeyChatInvite,
     Username,
-    Channel,
-    ChatForbidden,
-    ChannelForbidden,
 )
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
+from Detection import assistant
+
+from . import IGNORE_CHANNEL_DEV_LIST
 
 LOGS = logging.getLogger(__name__)
 
