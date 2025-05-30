@@ -129,24 +129,21 @@ async def handle_approvalub(client, callback, request, user_id, admin_id, admin_
             )
             return
         await db.users_detection.update_one(
-            {
-                "_id": request["_id"],
-                "user_client.status": "pending",
-                "user_client.user_id": int(user_id)
-            },
+            {"_id": request["_id"]},
             {
                 "$set": {
-                    "user_client.$.user_id": bot_user.id,
-                    "user_client.$.status": "approved",
-                    "user_client.$.is_active": True,
-                    "user_client.$.username": bot_user.username or "N/A",
-                    "user_client.$.started_at": dt.now().isoformat(),
-                    "user_client.$.admin_action": {
+                    "user_client.$[target].user_id": bot_user.id,
+                    "user_client.$[target].status": "approved",
+                    "user_client.$[target].is_active": True,
+                    "user_client.$[target].username": bot_user.username or "N/A",
+                    "user_client.$[target].started_at": dt.now().isoformat(),
+                    "user_client.$[target].admin_action": {
                         "by": admin_id,
                         "at": dt.now().isoformat()
                     }
                 }
-            }
+            },
+            array_filters=[{"target.user_id": int(user_id)}]
         )
         await notify_userub(client, user_id, bot_user)
         await client.send_message(
