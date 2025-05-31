@@ -24,7 +24,7 @@ from pyrogram import Client, filters
 from pyrogram.errors import AuthKeyUnregistered
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from config import API_HASH, API_ID, OWNER_ID, PRIVATE_GROUP_ID
+from config import API_HASH, API_ID, OWNER_ID, PRIVATE_GROUP_ID, SUPPORT_CHANNEL
 from database import db
 from Detection.manager.builder_session import generate_random_string
 
@@ -180,6 +180,6 @@ async def notify_userub(client, user_id, bot_user):
         photo="https://telegra.ph//file/586a3867c3e16ca6bb4fa.jpg",
         caption=caption,
         reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("Channel", url="https://t.me/RendyProjects")]
+            [InlineKeyboardButton("Channel", url=f"https://t.me/{SUPPORT_CHANNEL}")]
         ])
     )
