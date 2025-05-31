@@ -1,6 +1,10 @@
 # PROPRIETARY SOFTWARE LICENSE AGREEMENT
 **Detection Lite © 2025**
+
 **Owner: Randy Dev (@xtsea)**
+
+**Original Bot:** [`@DetectionLiteDev_Bot `](https://t.me/DetectionLiteDev_Bot)
+
 **All Rights Reserved**
 
 ## 🚫 STRICTLY NO REDISTRIBUTION
