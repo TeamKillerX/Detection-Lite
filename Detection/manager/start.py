@@ -29,7 +29,7 @@ from pyrogram.types import (
     ReplyKeyboardRemove,
 )
 
-from config import PRIVATE_GROUP_ID
+from config import PRIVATE_GROUP_ID, SUPPORT_CHANNEL
 
 force_reply = ReplyKeyboardMarkup(
     [
@@ -77,7 +77,7 @@ async def start_command(client: Client, message: Message):
     await message.reply_text(
         welcome_msg,
         reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("📢 Official Channel", url="https://t.me/RendyProjects")]
+            [InlineKeyboardButton("📢 Official Channel", url=f"https://t.me/{SUPPORT_CHANNEL}")]
         ])
     )
 
