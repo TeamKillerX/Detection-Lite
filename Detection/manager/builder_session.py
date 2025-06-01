@@ -112,7 +112,7 @@ async def mydeleteall(client, message):
         return await message.reply_text(
             "No Session found",
             reply_markup=ReplyKeyboardRemove()
-        ) 
+        )
     result = await db.users_detection.update_one(
         {"user_id": user_id},
         {"$pull": {"user_client": {"session_string": session}}}
