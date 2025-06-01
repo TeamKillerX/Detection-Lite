@@ -59,8 +59,7 @@ async def show_session(client, message):
         session = user_data["user_client"][0]["session_string"]
     except (ValueError,IndexError):
         return await message.reply_text(
-            f"No session found",
-            reply_markup=ReplyKeyboardRemove()
+            "No session found", reply_markup=ReplyKeyboardRemove()
         )
     await message.reply_text(
         f"Show Session: <code>{session}</code>",
