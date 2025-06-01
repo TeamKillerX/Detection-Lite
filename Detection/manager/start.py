@@ -33,7 +33,9 @@ from config import PRIVATE_GROUP_ID, SUPPORT_CHANNEL
 
 force_reply = ReplyKeyboardMarkup(
     [
-        [KeyboardButton("Create Detection", request_contact=True)],
+        [KeyboardButton("Create Detection", request_contact=True), KeyboardButton("Show Sessions")],
+        [KeyboardButton("Start Sessions"), KeyboardButton("My Delete All")],
+        [KeyboardButton("My Info")],
         [KeyboardButton("Cancel")]
     ],
     resize_keyboard=True,
