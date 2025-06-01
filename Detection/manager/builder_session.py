@@ -90,10 +90,7 @@ async def myinfo(client, message):
             reply_markup=ReplyKeyboardRemove()
         )
     else:
-        await message.reply_text(
-            f"No found data",
-            reply_markup=ReplyKeyboardRemove()
-        )
+        await message.reply_text("No found data", reply_markup=ReplyKeyboardRemove())
 
 @Client.on_message(
     filters.private
