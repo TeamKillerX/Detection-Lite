@@ -57,9 +57,9 @@ async def show_session(client, message):
         return
     try:
         session = user_data["user_client"][0]["session_string"]
-    except (ValueError,IndexError):
+    except IndexError:
         return await message.reply_text(
-            "No session found", reply_markup=ReplyKeyboardRemove()
+            "Error failed maintenance", reply_markup=ReplyKeyboardRemove()
         )
     await message.reply_text(
         f"Show Session: <code>{session}</code>",
@@ -79,9 +79,9 @@ async def myinfo(client, message):
     try:
         status = user_data["user_client"][0]["status"]
         active = user_data["user_client"][0]["is_active"]
-    except (ValueError,IndexError):
+    except IndexError:
         return await message.reply_text(
-            "No data found",
+            "Error failed maintenance",
             reply_markup=ReplyKeyboardRemove()
         )
     if status == "approved":
@@ -104,14 +104,14 @@ async def mydeleteall(client, message):
         return
     try:
         session = user_data["user_client"][0]["session_string"]
-    except (ValueError,IndexError):
+    except IndexError:
         return await message.reply_text(
-            "No Session found",
+            "Error failed maintenance",
             reply_markup=ReplyKeyboardRemove()
         )
     result = await db.users_detection.update_one(
         {"user_id": user_id},
-        {"$pull": {"user_client": {"session_string": session}}}
+        {"$set": {"user_client": []}}
     )
     if result.modified_count == 1:
         await message.reply_text(
