@@ -174,7 +174,7 @@ async def check_raw(client: Client, update, users, chats):
                     [[
                         InlineKeyboardButton(
                             "View Channel",
-                            url=f"https://t.me/c/{cid}/1"
+                            url=f"https://t.me/c/{cid}/-1"
                         )
                     ]]
                 )
@@ -195,7 +195,7 @@ async def check_raw(client: Client, update, users, chats):
                     [[
                         InlineKeyboardButton(
                             "View Group",
-                            url=f"https://t.me/c/{cid}/1"
+                            url=f"https://t.me/c/{cid}/-1"
                         )
                     ]]
                 )
@@ -216,7 +216,7 @@ async def check_raw(client: Client, update, users, chats):
                     [[
                         InlineKeyboardButton(
                             "View Channel",
-                            url=f"https://t.me/c/{cid}/1"
+                            url=f"https://t.me/c/{cid}/-1"
                         )
                     ]]
                 )
@@ -235,7 +235,7 @@ async def check_raw(client: Client, update, users, chats):
                     [[
                         InlineKeyboardButton(
                             "View Channel",
-                            url=f"https://t.me/c/{cid}/1"
+                            url=f"https://t.me/c/{cid}/-1"
                         )
                     ]]
                 )
@@ -254,7 +254,7 @@ async def check_raw(client: Client, update, users, chats):
                     [[
                         InlineKeyboardButton(
                             "View Channel",
-                            url=f"https://t.me/c/{cid}/1"
+                            url=f"https://t.me/c/{cid}/-1"
                         )
                     ]]
                 )
@@ -273,7 +273,7 @@ async def check_raw(client: Client, update, users, chats):
                     [[
                         InlineKeyboardButton(
                             "View Channel",
-                            url=f"https://t.me/c/{cid}/1"
+                            url=f"https://t.me/c/{cid}/-1"
                         )
                     ]]
                 )
@@ -294,7 +294,7 @@ async def check_raw(client: Client, update, users, chats):
                     [[
                         InlineKeyboardButton(
                             "View Channel",
-                            url=f"https://t.me/c/{cid}/1"
+                            url=f"https://t.me/c/{cid}/-1"
                         )
                     ]]
                 )

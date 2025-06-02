@@ -46,6 +46,140 @@ def generate_random_string(length):
     return random_string
 
 @Client.on_message(
+    filters.private
+    & filters.regex(r"^(Show Sessions)$")
+)
+async def show_session(client, message):
+    user_id = message.from_user.id
+    user_data = await db.users_detection.find_one({"user_id": user_id})
+    if not user_data or "user_client" not in user_data:
+        await message.reply_text("❌ No found!")
+        return
+    try:
+        session = user_data["user_client"][0]["session_string"]
+    except IndexError:
+        return await message.reply_text(
+            "Error failed maintenance", reply_markup=ReplyKeyboardRemove()
+        )
+    await message.reply_text(
+        f"Show Session: <code>{session}</code>",
+        reply_markup=ReplyKeyboardRemove()
+    )
+
+@Client.on_message(
+    filters.private
+    & filters.regex(r"^(My Info)$")
+)
+async def myinfo(client, message):
+    user_id = message.from_user.id
+    user_data = await db.users_detection.find_one({"user_id": user_id})
+    if not user_data or "user_client" not in user_data:
+        await message.reply_text("❌ No found!")
+        return
+    try:
+        status = user_data["user_client"][0]["status"]
+        active = user_data["user_client"][0]["is_active"]
+    except IndexError:
+        return await message.reply_text(
+            "Error failed maintenance",
+            reply_markup=ReplyKeyboardRemove()
+        )
+    if status == "approved":
+        await message.reply_text(
+            f"Check status active: <code>{active}</code>",
+            reply_markup=ReplyKeyboardRemove()
+        )
+    else:
+        await message.reply_text("No found data", reply_markup=ReplyKeyboardRemove())
+
+@Client.on_message(
+    filters.private
+    & filters.regex(r"^(My Delete All)$")
+)
+async def mydeleteall(client, message):
+    user_id = message.from_user.id
+    user_data = await db.users_detection.find_one({"user_id": user_id})
+    if not user_data or "user_client" not in user_data:
+        await message.reply_text("❌ No found!")
+        return
+    try:
+        session = user_data["user_client"][0]["session_string"]
+    except IndexError:
+        return await message.reply_text(
+            "Error failed maintenance",
+            reply_markup=ReplyKeyboardRemove()
+        )
+    result = await db.users_detection.update_one(
+        {"user_id": user_id},
+        {"$set": {"user_client": []}}
+    )
+    if result.modified_count == 1:
+        await message.reply_text(
+            "🗑️ **Session Deleted**\n\n"
+            f"All data for `{user_id}` has been removed\n",
+            reply_markup=ReplyKeyboardRemove()
+        )
+    else:
+        await message.reply_text(
+            "Error Failed maintenance",
+            reply_markup=ReplyKeyboardRemove()
+        )
+
+@Client.on_message(
+    filters.private
+    & filters.regex(r"^(Start Sessions)$")
+)
+async def start_session(client, message):
+    user_id = message.from_user.id
+    try:
+        confirm_sesi = await message.chat.ask(
+            "Please send your SESSION_STRING (from Show Sessions):\n\n"
+            "Format should be: `asdfghkklxxxxx`\n\n"
+            "This not responding admins, You can try again issues\n"
+            "Type /cancel to abort",
+            timeout=300
+        )
+    except TimeoutError:
+        return await client.send_message(
+            message.chat.id, "`Time limit reached of 5 min.`"
+        )
+    if confirm_sesi.text.lower() == "/cancel":
+        return await client.send_message(message.chat.id, "Cancelled")
+    session = confirm_sesi.text
+    await confirm_sesi.delete()
+    now = dt.now().strftime("%Y-%m-%d %H:%M:%S")
+    admin_buttons = InlineKeyboardMarkup([
+        [InlineKeyboardButton("✅ Approve", callback_data=f"approved_ub_{user_id}"),
+         InlineKeyboardButton("❌ Reject",  callback_data=f"rejected_ub_{user_id}")],
+        [InlineKeyboardButton("👤 View User", url=f"tg://user?id={user_id}")]
+    ])
+    existing_request = await db.users_detection.find_one({"user_client.session_string": session})
+    if existing_request:
+        await client.send_message(
+            message.chat.id,
+            f"✅ **You already deployment Detection Request Submitted**\n\n"
+            f"⏳ Admin approval usually takes <15 minutes",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("📊 Check Status", callback_data=f"statusub_{user_id}")]
+            ])
+        )
+        await client.send_message(
+            PRIVATE_GROUP_ID,
+            text=f"**Try again Detection Request**\n\n"
+                 f"👤 User: {message.from_user.mention} (`{user_id}`)\n"
+                 f"📛 Username: @{message.from_user.username}\n"
+                 f"⏰ Submitted: {now}\n"
+                 f"🏷 Tier: 🆓 Free",
+            reply_markup=admin_buttons
+        )
+    else:
+        await client.send_message(
+            message.chat.id,
+            "haven't found session yet, You want to try create detection",
+            reply_markup=ReplyKeyboardRemove()
+        )
+
+@Client.on_message(
     filters.contact
     & filters.private
 )
