@@ -18,7 +18,7 @@ Contact: killerx@randydev.my.id
 """
 
 import logging
-
+import asyncio
 from pyrogram import Client
 from pyrogram.raw.types import (
     Channel,
@@ -161,7 +161,7 @@ async def check_raw(client: Client, update, users, chats):
         if isinstance(chat, ChannelForbidden):
             if cid in IGNORE_CHANNEL_DEV_LIST:
                 return
-            await assistant.send_message(
+            return await assistant.send_message(
                 client.me.id,
                 f"#BANNED_ALERT\n"
                 f"**Channel:** {chat.title}\n"
@@ -182,7 +182,7 @@ async def check_raw(client: Client, update, users, chats):
         elif isinstance(chat, ChatForbidden):
             if cid in IGNORE_CHANNEL_DEV_LIST:
                 return
-            await assistant.send_message(
+            return await assistant.send_message(
                 client.me.id,
                 f"#BANNED_ALERT\n"
                 f"**Chat:** {chat.title}\n"
@@ -203,7 +203,8 @@ async def check_raw(client: Client, update, users, chats):
         elif isinstance(chat, Channel) and getattr(chat, "left", False):
             if cid in IGNORE_CHANNEL_DEV_LIST:
                 return
-            await assistant.send_message(
+            await asyncio.sleep(1.5)
+            return await assistant.send_message(
                 client.me.id,
                 f"#UNBANNED #LEFT_ALERT\n"
                 f"**Channel:** {chat.title}\n"
@@ -222,7 +223,7 @@ async def check_raw(client: Client, update, users, chats):
                 )
             )
         elif isinstance(chat, Channel) and getattr(chat, "restricted", False):
-            await assistant.send_message(
+            return await assistant.send_message(
                 client.me.id,
                 f"#RESTRICTED_ALERT\n"
                 f"**Channel:** {chat.title}\n"
@@ -241,7 +242,7 @@ async def check_raw(client: Client, update, users, chats):
                 )
             )
         elif isinstance(chat, Channel) and getattr(chat, "scam", False):
-            await assistant.send_message(
+            return await assistant.send_message(
                 client.me.id,
                 f"#SCAM_ALERT\n"
                 f"**Channel:** {chat.title}\n"
@@ -260,7 +261,7 @@ async def check_raw(client: Client, update, users, chats):
                 )
             )
         elif isinstance(chat, Channel) and getattr(chat, "fake", False):
-            await assistant.send_message(
+            return await assistant.send_message(
                 client.me.id,
                 f"#FAKE_ALERT\n"
                 f"**Channel:** {chat.title}\n"
@@ -281,7 +282,8 @@ async def check_raw(client: Client, update, users, chats):
         elif isinstance(chat, Channel) and getattr(chat, "broadcast", False):
             if cid in BLACKLIST_CHANNEL_NOPOST:
                 return
-            await assistant.send_message(
+            await asyncio.sleep(1.5)
+            return await assistant.send_message(
                 client.me.id,
                 f"#BROADCAST_ALERT\n"
                 f"**Channel:** {chat.title}\n"
