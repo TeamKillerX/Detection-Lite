@@ -39,7 +39,7 @@ from pyrogram.raw.types import (
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, LinkPreviewOptions
 
-from config import ENABLE_BROADCAST_ALERTS, ENABLE_UNBANNED_ALERTS, BLACKLIST_CHANNEL_NOPOST
+from config import BLACKLIST_CHANNEL_NOPOST, ENABLE_BROADCAST_ALERTS, ENABLE_UNBANNED_ALERTS
 from Detection import assistant
 
 from . import IGNORE_CHANNEL_DEV_LIST
