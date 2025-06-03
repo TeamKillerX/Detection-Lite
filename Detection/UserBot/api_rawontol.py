@@ -39,7 +39,7 @@ from pyrogram.raw.types import (
 )
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, LinkPreviewOptions
 
-from config import ADD_BROADCAST_RAW_BOOL, ADD_UNBANNED_RAW_BOOL, BLACKLIST_CHANNEL_NOPOST
+from config import ENABLE_BROADCAST_ALERTS, ENABLE_UNBANNED_ALERTS, BLACKLIST_CHANNEL_NOPOST
 from Detection import assistant
 
 from . import IGNORE_CHANNEL_DEV_LIST
@@ -205,7 +205,7 @@ async def check_raw(client: Client, update, users, chats):
             )
 
         elif isinstance(chat, Channel) and chat.left:
-            if not ADD_UNBANNED_RAW_BOOL:
+            if not ENABLE_UNBANNED_ALERTS:
                 return
             if cid in IGNORE_CHANNEL_DEV_LIST:
                 return
@@ -294,7 +294,7 @@ async def check_raw(client: Client, update, users, chats):
             )
 
         elif isinstance(chat, Channel) and chat.broadcast:
-            if not ADD_BROADCAST_RAW_BOOL:
+            if not ENABLE_BROADCAST_ALERTS:
                 return
             if cid in BLACKLIST_CHANNEL_NOPOST:
                 return
