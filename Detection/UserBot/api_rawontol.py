@@ -37,9 +37,9 @@ from pyrogram.raw.types import (
     UpdateUserName,
     Username,
 )
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, LinkPreviewOptions
 
-from config import BLACKLIST_CHANNEL_NOPOST
+from config import BLACKLIST_CHANNEL_NOPOST, ENABLE_BROADCAST_ALERTS, ENABLE_UNBANNED_ALERTS
 from Detection import assistant
 
 from . import IGNORE_CHANNEL_DEV_LIST
@@ -50,7 +50,7 @@ async def send_log(client, text):
     return await assistant.send_message(
         client.me.id,
         text,
-        disable_web_page_preview=True,
+        link_preview_options=LinkPreviewOptions(is_disabled=True),
         reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("View User", url=f"tg://openmessage?user_id={client.me.id}")]
             ])
@@ -69,7 +69,7 @@ async def check_raw(client: Client, update, users, chats):
                     client.me.id,
                     "#PINNED_MESSAGE_PM_ALERT\n\n"
                     f"**User ID:** `{peer.user_id}`\n",
-                    disable_web_page_preview=True,
+                    link_preview_options=LinkPreviewOptions(is_disabled=True),
                     reply_markup=InlineKeyboardMarkup([
                         [InlineKeyboardButton("View User PM", url=f"tg://openmessage?user_id={peer.user_id}&message_id={message_ids}")]
                     ])
@@ -122,7 +122,7 @@ async def check_raw(client: Client, update, users, chats):
                     f"**User ID:** `{user_id}`\n"
                     f"**Username:** <spoiler>{username.username}</spoiler>\n"
                     f"**Editable:** {username.editable}\n",
-                    disable_web_page_preview=True,
+                    link_preview_options=LinkPreviewOptions(is_disabled=True),
                     reply_markup=InlineKeyboardMarkup([
                         [InlineKeyboardButton("View User", url=f"tg://openmessage?user_id={user_id}")]
                     ])
@@ -148,7 +148,7 @@ async def check_raw(client: Client, update, users, chats):
             f"**User:** `{user_id}`\n"
             f"**Message ID:** {message.id}\n"
             f"**Message:** `{message.message}`\n",
-            disable_web_page_preview=True,
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
             reply_markup=InlineKeyboardMarkup(
                 [[
                     InlineKeyboardButton(
@@ -158,6 +158,7 @@ async def check_raw(client: Client, update, users, chats):
                 ]]
             )
         )
+
     for cid, chat in chats.items():
         if isinstance(chat, ChannelForbidden):
             if cid in IGNORE_CHANNEL_DEV_LIST:
@@ -170,7 +171,7 @@ async def check_raw(client: Client, update, users, chats):
                 f"**Access hash:** <spoiler>{chat.access_hash}</spoiler>\n"
                 f"**Type:** Channel\n"
                 f"**Reason:** Banned from channel",
-                disable_web_page_preview=True,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
                 reply_markup=InlineKeyboardMarkup(
                     [[
                         InlineKeyboardButton(
@@ -180,6 +181,7 @@ async def check_raw(client: Client, update, users, chats):
                     ]]
                 )
             )
+
         elif isinstance(chat, ChatForbidden):
             if cid in IGNORE_CHANNEL_DEV_LIST:
                 return
@@ -191,7 +193,7 @@ async def check_raw(client: Client, update, users, chats):
                 f"**Access hash:** <spoiler>{chat.access_hash}</spoiler>\n"
                 f"**Type:** Group\n"
                 f"**Reason:** Banned from group",
-                disable_web_page_preview=True,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
                 reply_markup=InlineKeyboardMarkup(
                     [[
                         InlineKeyboardButton(
@@ -201,19 +203,23 @@ async def check_raw(client: Client, update, users, chats):
                     ]]
                 )
             )
-        elif isinstance(chat, Channel) and getattr(chat, "left", False):
+
+        elif isinstance(chat, Channel) and chat.left:
+            if not ENABLE_UNBANNED_ALERTS:
+                return
             if cid in IGNORE_CHANNEL_DEV_LIST:
                 return
             await asyncio.sleep(1.5)
+            username = f"<spoiler>{chat.username}</spoiler>" if chat.username else "N/A"
             return await assistant.send_message(
                 client.me.id,
                 f"#UNBANNED #LEFT_ALERT\n"
                 f"**Channel:** {chat.title}\n"
                 f"**Date:** {chat.date}\n"
                 f"**ID:** `{cid}`\n"
-                f"**Username:** <spoiler>{chat.username if chat else None}</spoiler>\n"
+                f"**Username:** {username}\n"
                 f"**Access hash:** <spoiler>{chat.access_hash}</spoiler>\n",
-                disable_web_page_preview=True,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
                 reply_markup=InlineKeyboardMarkup(
                     [[
                         InlineKeyboardButton(
@@ -223,16 +229,18 @@ async def check_raw(client: Client, update, users, chats):
                     ]]
                 )
             )
-        elif isinstance(chat, Channel) and getattr(chat, "restricted", False):
+
+        elif isinstance(chat, Channel) and chat.restricted:
+            username = f"<spoiler>{chat.username}</spoiler>" if chat.username else "N/A"
             return await assistant.send_message(
                 client.me.id,
                 f"#RESTRICTED_ALERT\n"
                 f"**Channel:** {chat.title}\n"
                 f"**Date:** {chat.date}\n"
                 f"**ID:** `{cid}`\n"
-                f"**Username:** <spoiler>{chat.username if chat else None}</spoiler>\n"
+                f"**Username:** {username}\n"
                 f"**Access hash:** {chat.access_hash}\n",
-                disable_web_page_preview=True,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
                 reply_markup=InlineKeyboardMarkup(
                     [[
                         InlineKeyboardButton(
@@ -242,16 +250,18 @@ async def check_raw(client: Client, update, users, chats):
                     ]]
                 )
             )
-        elif isinstance(chat, Channel) and getattr(chat, "scam", False):
+
+        elif isinstance(chat, Channel) and chat.scam:
+            username = f"<spoiler>{chat.username}</spoiler>" if chat.username else "N/A"
             return await assistant.send_message(
                 client.me.id,
                 f"#SCAM_ALERT\n"
                 f"**Channel:** {chat.title}\n"
                 f"**Date:** {chat.date}\n"
                 f"**ID:** `{cid}`\n"
-                f"**Username:** <spoiler>{chat.username if chat else None}</spoiler>\n"
+                f"**Username:** {username}\n"
                 f"**Access hash:** {chat.access_hash}\n",
-                disable_web_page_preview=True,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
                 reply_markup=InlineKeyboardMarkup(
                     [[
                         InlineKeyboardButton(
@@ -261,16 +271,18 @@ async def check_raw(client: Client, update, users, chats):
                     ]]
                 )
             )
-        elif isinstance(chat, Channel) and getattr(chat, "fake", False):
+
+        elif isinstance(chat, Channel) and chat.fake:
+            username = f"<spoiler>{chat.username}</spoiler>" if chat.username else "N/A"
             return await assistant.send_message(
                 client.me.id,
                 f"#FAKE_ALERT\n"
                 f"**Channel:** {chat.title}\n"
                 f"**Date:** {chat.date}\n"
                 f"**ID:** `{cid}`\n"
-                f"**Username:** <spoiler>{chat.username if chat else None}</spoiler>\n"
+                f"**Username:** {username}\n"
                 f"**Access hash:** {chat.access_hash}\n",
-                disable_web_page_preview=True,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
                 reply_markup=InlineKeyboardMarkup(
                     [[
                         InlineKeyboardButton(
@@ -280,19 +292,23 @@ async def check_raw(client: Client, update, users, chats):
                     ]]
                 )
             )
-        elif isinstance(chat, Channel) and getattr(chat, "broadcast", False):
+
+        elif isinstance(chat, Channel) and chat.broadcast:
+            if not ENABLE_BROADCAST_ALERTS:
+                return
             if cid in BLACKLIST_CHANNEL_NOPOST:
                 return
             await asyncio.sleep(1.5)
+            username = f"<spoiler>{chat.username}</spoiler>" if chat.username else "N/A"
             return await assistant.send_message(
                 client.me.id,
                 f"#BROADCAST_ALERT\n"
                 f"**Channel:** {chat.title}\n"
                 f"**Date:** {chat.date}\n"
                 f"**ID:** `{cid}`\n"
-                f"**Username:** <spoiler>{chat.username if chat else None}</spoiler>\n"
+                f"**Username:** {username}\n"
                 f"**Access hash:** {chat.access_hash}\n",
-                disable_web_page_preview=True,
+                link_preview_options=LinkPreviewOptions(is_disabled=True),
                 reply_markup=InlineKeyboardMarkup(
                     [[
                         InlineKeyboardButton(
