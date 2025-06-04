@@ -21,6 +21,7 @@ import asyncio
 import logging
 
 from pyrogram import Client
+from datetime import datetime as dt
 from pyrogram.raw.types import (
     Channel,
     ChannelForbidden,
@@ -120,7 +121,7 @@ async def check_raw(client: Client, update, users, chats):
                     "#NAME_CHANGED_ALERT\n\n"
                     f"**First Name:** `{first_name}`\n"
                     f"**User ID:** `{user_id}`\n"
-                    f"**Username:** <spoiler>{username.username}</spoiler>\n"
+                    f"**Username:** `{username.username}`\n"
                     f"**Editable:** {username.editable}\n",
                     link_preview_options=LinkPreviewOptions(is_disabled=True),
                     reply_markup=InlineKeyboardMarkup([
@@ -210,87 +211,99 @@ async def check_raw(client: Client, update, users, chats):
             if cid in IGNORE_CHANNEL_DEV_LIST:
                 return
             await asyncio.sleep(1.5)
-            username = f"<spoiler>{chat.username}</spoiler>" if chat.username else "N/A"
+            keyboard = []
+            if chat.username is None:
+                keyboard.append([
+                    InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
+                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+                ])
+            else:
+                keyboard.append([
+                    InlineKeyboardButton("View Username", url=f"https://t.me/{chat.username}"),
+                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+                ])
+            object_time = dt.fromtimestamp(chat.date)
             return await assistant.send_message(
                 client.me.id,
                 f"#UNBANNED #LEFT_ALERT\n"
                 f"**Channel:** {chat.title}\n"
-                f"**Date:** {chat.date}\n"
+                f"**Date:** {object_time}\n"
                 f"**ID:** `{cid}`\n"
-                f"**Username:** {username}\n"
-                f"**Access hash:** <spoiler>{chat.access_hash}</spoiler>\n",
+                f"**Access hash:** `{chat.access_hash}`\n",
                 link_preview_options=LinkPreviewOptions(is_disabled=True),
-                reply_markup=InlineKeyboardMarkup(
-                    [[
-                        InlineKeyboardButton(
-                            "View Channel",
-                            url=f"https://t.me/c/{cid}/-1"
-                        )
-                    ]]
-                )
+                reply_markup=InlineKeyboardMarkup(keyboard)
             )
 
         elif isinstance(chat, Channel) and chat.restricted:
-            username = f"<spoiler>{chat.username}</spoiler>" if chat.username else "N/A"
+            keyboard = []
+            if chat.username is None:
+                keyboard.append([
+                    InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
+                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+                ])
+            else:
+                keyboard.append([
+                    InlineKeyboardButton("View Username", url=f"https://t.me/{chat.username}"),
+                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+                ])
+            object_time = dt.fromtimestamp(chat.date)
             return await assistant.send_message(
                 client.me.id,
                 f"#RESTRICTED_ALERT\n"
                 f"**Channel:** {chat.title}\n"
-                f"**Date:** {chat.date}\n"
+                f"**Date:** {object_time}\n"
                 f"**ID:** `{cid}`\n"
-                f"**Username:** {username}\n"
-                f"**Access hash:** {chat.access_hash}\n",
+                f"**Access hash:** `{chat.access_hash}`\n",
                 link_preview_options=LinkPreviewOptions(is_disabled=True),
-                reply_markup=InlineKeyboardMarkup(
-                    [[
-                        InlineKeyboardButton(
-                            "View Channel",
-                            url=f"https://t.me/c/{cid}/-1"
-                        )
-                    ]]
-                )
+                reply_markup=InlineKeyboardMarkup(keyboard)
             )
 
         elif isinstance(chat, Channel) and chat.scam:
-            username = f"<spoiler>{chat.username}</spoiler>" if chat.username else "N/A"
+            keyboard = []
+            if chat.username is None:
+                keyboard.append([
+                    InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
+                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+                ])
+            else:
+                keyboard.append([
+                    InlineKeyboardButton("View Username", url=f"https://t.me/{chat.username}"),
+                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+                ])
+            object_time = dt.fromtimestamp(chat.date)
             return await assistant.send_message(
                 client.me.id,
                 f"#SCAM_ALERT\n"
                 f"**Channel:** {chat.title}\n"
-                f"**Date:** {chat.date}\n"
+                f"**Date:** {object_time}\n"
                 f"**ID:** `{cid}`\n"
-                f"**Username:** {username}\n"
-                f"**Access hash:** {chat.access_hash}\n",
+                f"**Access hash:** `{chat.access_hash}`\n",
                 link_preview_options=LinkPreviewOptions(is_disabled=True),
-                reply_markup=InlineKeyboardMarkup(
-                    [[
-                        InlineKeyboardButton(
-                            "View Channel",
-                            url=f"https://t.me/c/{cid}/-1"
-                        )
-                    ]]
-                )
+                reply_markup=InlineKeyboardMarkup(keyboard)
             )
 
         elif isinstance(chat, Channel) and chat.fake:
-            username = f"<spoiler>{chat.username}</spoiler>" if chat.username else "N/A"
+            keyboard = []
+            if chat.username is None:
+                keyboard.append([
+                    InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
+                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+                ])
+            else:
+                keyboard.append([
+                    InlineKeyboardButton("View Username", url=f"https://t.me/{chat.username}"),
+                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+                ])
+            object_time = dt.fromtimestamp(chat.date)
             return await assistant.send_message(
                 client.me.id,
                 f"#FAKE_ALERT\n"
                 f"**Channel:** {chat.title}\n"
-                f"**Date:** {chat.date}\n"
+                f"**Date:** {object_time}\n"
                 f"**ID:** `{cid}`\n"
-                f"**Username:** {username}\n"
-                f"**Access hash:** {chat.access_hash}\n",
+                f"**Access hash:** `{chat.access_hash}`\n",
                 link_preview_options=LinkPreviewOptions(is_disabled=True),
-                reply_markup=InlineKeyboardMarkup(
-                    [[
-                        InlineKeyboardButton(
-                            "View Channel",
-                            url=f"https://t.me/c/{cid}/-1"
-                        )
-                    ]]
-                )
+                reply_markup=InlineKeyboardMarkup(keyboard)
             )
 
         elif isinstance(chat, Channel) and chat.broadcast:
@@ -299,22 +312,25 @@ async def check_raw(client: Client, update, users, chats):
             if cid in BLACKLIST_CHANNEL_NOPOST:
                 return
             await asyncio.sleep(1.5)
-            username = f"<spoiler>{chat.username}</spoiler>" if chat.username else "N/A"
+            keyboard = []
+            if chat.username is None:
+                keyboard.append([
+                    InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
+                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+                ])
+            else:
+                keyboard.append([
+                    InlineKeyboardButton("View Username", url=f"https://t.me/{chat.username}"),
+                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+                ])
+            object_time = dt.fromtimestamp(chat.date)
             return await assistant.send_message(
                 client.me.id,
                 f"#BROADCAST_ALERT\n"
                 f"**Channel:** {chat.title}\n"
-                f"**Date:** {chat.date}\n"
+                f"**Date:** {object_time}\n"
                 f"**ID:** `{cid}`\n"
-                f"**Username:** {username}\n"
-                f"**Access hash:** {chat.access_hash}\n",
+                f"**Access hash:** `{chat.access_hash}`\n",
                 link_preview_options=LinkPreviewOptions(is_disabled=True),
-                reply_markup=InlineKeyboardMarkup(
-                    [[
-                        InlineKeyboardButton(
-                            "View Channel",
-                            url=f"https://t.me/c/{cid}/-1"
-                        )
-                    ]]
-                )
+                reply_markup=InlineKeyboardMarkup(keyboard)
             )
