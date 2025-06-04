@@ -57,6 +57,23 @@ async def send_log(client, text):
             ])
         )
 
+def build_keyboard(username, cid):
+    if username is None:
+        return [
+            [
+                InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
+                InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+            ]
+        ]
+    else:
+        return [
+            [
+                InlineKeyboardButton("View Username", url=f"https://t.me/{username}"),
+                InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
+            ]
+        ]
+
+
 @Client.on_raw_update()
 async def check_raw(client: Client, update, users, chats):
     if isinstance(update, UpdatePinnedMessages):
@@ -211,17 +228,7 @@ async def check_raw(client: Client, update, users, chats):
             if cid in IGNORE_CHANNEL_DEV_LIST:
                 return
             await asyncio.sleep(1.5)
-            keyboard = []
-            if chat.username is None:
-                keyboard.append([
-                    InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
-                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
-                ])
-            else:
-                keyboard.append([
-                    InlineKeyboardButton("View Username", url=f"https://t.me/{chat.username}"),
-                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
-                ])
+            keyboard = build_keyboard(chat.username, cid)
             object_time = dt.fromtimestamp(chat.date)
             return await assistant.send_message(
                 client.me.id,
@@ -235,17 +242,7 @@ async def check_raw(client: Client, update, users, chats):
             )
 
         elif isinstance(chat, Channel) and chat.restricted:
-            keyboard = []
-            if chat.username is None:
-                keyboard.append([
-                    InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
-                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
-                ])
-            else:
-                keyboard.append([
-                    InlineKeyboardButton("View Username", url=f"https://t.me/{chat.username}"),
-                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
-                ])
+            keyboard = build_keyboard(chat.username, cid)
             object_time = dt.fromtimestamp(chat.date)
             return await assistant.send_message(
                 client.me.id,
@@ -259,17 +256,7 @@ async def check_raw(client: Client, update, users, chats):
             )
 
         elif isinstance(chat, Channel) and chat.scam:
-            keyboard = []
-            if chat.username is None:
-                keyboard.append([
-                    InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
-                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
-                ])
-            else:
-                keyboard.append([
-                    InlineKeyboardButton("View Username", url=f"https://t.me/{chat.username}"),
-                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
-                ])
+            keyboard = build_keyboard(chat.username, cid)
             object_time = dt.fromtimestamp(chat.date)
             return await assistant.send_message(
                 client.me.id,
@@ -283,17 +270,7 @@ async def check_raw(client: Client, update, users, chats):
             )
 
         elif isinstance(chat, Channel) and chat.fake:
-            keyboard = []
-            if chat.username is None:
-                keyboard.append([
-                    InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
-                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
-                ])
-            else:
-                keyboard.append([
-                    InlineKeyboardButton("View Username", url=f"https://t.me/{chat.username}"),
-                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
-                ])
+            keyboard = build_keyboard(chat.username, cid)
             object_time = dt.fromtimestamp(chat.date)
             return await assistant.send_message(
                 client.me.id,
@@ -312,17 +289,7 @@ async def check_raw(client: Client, update, users, chats):
             if cid in BLACKLIST_CHANNEL_NOPOST:
                 return
             await asyncio.sleep(1.5)
-            keyboard = []
-            if chat.username is None:
-                keyboard.append([
-                    InlineKeyboardButton("View Channel", url=f"https://t.me/c/{cid}/-1"),
-                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
-                ])
-            else:
-                keyboard.append([
-                    InlineKeyboardButton("View Username", url=f"https://t.me/{chat.username}"),
-                    InlineKeyboardButton("Copy ChatID", copy_text=f"Copy: -100{cid}")
-                ])
+            keyboard = build_keyboard(chat.username, cid)
             object_time = dt.fromtimestamp(chat.date)
             return await assistant.send_message(
                 client.me.id,
