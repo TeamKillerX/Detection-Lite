@@ -19,9 +19,9 @@ Contact: killerx@randydev.my.id
 
 import asyncio
 import logging
+from datetime import datetime as dt
 
 from pyrogram import Client
-from datetime import datetime as dt
 from pyrogram.raw.types import (
     Channel,
     ChannelForbidden,
